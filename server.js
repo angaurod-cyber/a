@@ -1,10 +1,11 @@
 const WebSocket = require("ws");
-const server = new WebSocket.Server({ port: process.env.PORT || 3000 });
+const port = process.env.PORT || 3000;
+const server = new WebSocket.Server({ port });
 
 server.on("connection", socket => {
+  console.log("Cliente conectado");
   socket.on("message", msg => {
     console.log("Mensaje recibido:", msg);
-    // reenviar a todos los clientes conectados
     server.clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(msg);
@@ -12,3 +13,5 @@ server.on("connection", socket => {
     });
   });
 });
+
+console.log("Servidor WS iniciado en puerto", port);
